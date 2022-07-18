@@ -12,26 +12,51 @@ class Solution(object):
         :type words: List[str]
         :rtype: List[int]
         """
+        res = []
+
         wordsMap = {}
         statisticsMap = {}
+        wordsCount = 0
+        statisticsWordsCount = 0
+        
         for word in words:
+            wordsCount += 1
             if wordsMap.get(word):
-                wordsMap[word] = wordsMap[word] + 1
+                wordsMap[word] += 1
             else:
-                wordsMap[word] = 0
-                statisticsMap[word] = 0
+                wordsMap[word] = 1
         wordLen = len(words[0])
-        for i in range(0, len(s), wordLen):
-            # TODO
-            pass
+        for i in range(wordLen):
+            for key in wordsMap:
+                statisticsMap[key] = 0
+            statisticsWordsCount = 0
+            while i < len(s):
+                # TODO
+                currentWord = s[i:i+wordLen]
+                if currentWord in wordsMap:
+                    statisticsMap[currentWord] += 1
+                    statisticsWordsCount += 1
+                    
+                    while statisticsMap[currentWord] > wordsMap[currentWord]:
+                        start = i - (statisticsWordsCount-1)*wordLen
+                        startWord = s[start:start+wordLen]
+                        statisticsMap[startWord] -= 1
+                        statisticsWordsCount -= 1
+                    
+                    if statisticsWordsCount == wordsCount:
+                        start = i - (statisticsWordsCount-1)*wordLen
+                        res.append(start)
+                    
+                else:
+                    for key in wordsMap:
+                        statisticsMap[key] = 0
+                    statisticsWordsCount = 0
 
-    def wordCompare(word, s, index):
-        wordLen = len(word)
-        for i in range(index, index+wordLen):
-            if s[i] != word[i]:
-                return False
-        return True
+                i += wordLen
+        return res
         
                 
 # @lc code=end
+
+# Solution().findSubstring("barfoothefoobarman", ["foo","bar"])
 
